@@ -6,34 +6,32 @@
     <title>Zeki Türk V1.2 - Batuhan Edition</title>
     <style>
         :root { --main-color: #f68e1e; --bg-dark: #0a0a0a; --panel-dark: #1a1a1a; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--bg-dark); color: #fff; display: flex; height: 100vh; margin: 0; overflow: hidden; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--bg-dark); color: #fff; display: flex; height: 100vh; margin: 0; overflow: hidden; }
         #sidebar { width: 260px; background: var(--panel-dark); border-right: 1px solid #333; display: flex; flex-direction: column; padding: 15px; }
         #main-content { flex: 1; display: flex; flex-direction: column; }
         #header { background: var(--panel-dark); padding: 15px 25px; border-bottom: 1px solid #333; display: flex; justify-content: space-between; align-items: center; }
         #header h2 { margin: 0; font-size: 1.1rem; color: var(--main-color); }
         #messages { flex: 1; padding: 25px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; }
-        .msg { padding: 14px 18px; border-radius: 15px; max-width: 80%; line-height: 1.6; }
+        .msg { padding: 14px 18px; border-radius: 15px; max-width: 80%; line-height: 1.6; font-size: 1rem; }
         .user { background: var(--main-color); color: #000; align-self: flex-end; border-bottom-right-radius: 2px; }
-        .bot { background: #222; align-self: flex-start; border-bottom-left-radius: 2px; border-left: 5px solid var(--main-color); }
+        .bot { background: #222; align-self: flex-start; border-bottom-left-radius: 2px; border-left: 5px solid var(--main-color); color: #eee; }
         #input-area { padding: 20px; background: var(--panel-dark); border-top: 1px solid #333; display: flex; gap: 10px; }
         input { flex: 1; padding: 12px; border-radius: 10px; background: #2a2a2a; color: #fff; border: none; outline: none; }
         button { background: var(--main-color); border: none; padding: 0 25px; border-radius: 10px; cursor: pointer; font-weight: bold; }
     </style>
 </head>
 <body>
-
     <div id="sidebar">
         <button style="background:var(--main-color); border:none; padding:10px; border-radius:8px; cursor:pointer; font-weight:bold;" onclick="location.reload()">+ Yeni Sohbet</button>
-        <div style="margin-top:20px; padding:10px; background:#222; border-radius:8px; font-size:0.8rem; border-left:4px solid var(--main-color);">Zeki Türk V1.2<br>Yönetici Modu Aktif</div>
+        <div style="margin-top:20px; padding:10px; background:#222; border-radius:8px; font-size:0.8rem; border-left:4px solid var(--main-color);">Zeki Türk V1.2<br>Batuhan Edition Aktif</div>
     </div>
-
     <div id="main-content">
         <div id="header">
             <h2>ZEKİ TÜRK <small style="color:#888;">V1.2</small></h2>
             <div style="font-size: 0.85rem; color: var(--main-color); font-weight: bold;">Batuhan tarafından kurulmaya başlandım...</div>
         </div>
         <div id="messages">
-            <div class="msg bot">Selam aslanım! Batuhan'ın inadıyla buradayım. Bugün neyi çözeceğiz?</div>
+            <div class="msg bot">Selam aslanım! Yeni anahtar mermi gibi hazır. Batuhan'ın inadıyla buradayım. Ne sormak istersin?</div>
         </div>
         <div id="input-area">
             <input type="text" id="userInput" placeholder="Mesajını yaz..." onkeypress="if(event.key==='Enter') send()">
@@ -44,7 +42,7 @@
     <script>
         const SB_URL = "https://wsmkyqzernoktmvfvyxf.supabase.co";
         const SB_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndzbWt5cXplcm5va3RtdmZ2eHlmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ2MjM4MzEsImV4cCI6MjA5MDE5OTgzMX0.0a7jPXjNZXJMwXJBpJ9DRtFyodpmuGVW5lf4gAUTVfc";
-        const GROQ_KEY = "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"; 
+        const GROQ_KEY = "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"; 
 
         function addUI(txt, type) {
             const m = document.getElementById('messages');
@@ -63,7 +61,6 @@
             addUI(text, 'user');
             input.value = '';
 
-            // --- GİZLİ KOMUT (PANELE GİRİŞ) ---
             if(text.toLowerCase() === "patron-izle") {
                 try {
                     const r = await fetch(`${SB_URL}/rest/v1/mesajlar?select=soru&order=id.desc&limit=5`, {
@@ -71,13 +68,12 @@
                     });
                     const d = await r.json();
                     let log = "🕵️‍♂️ SON 5 KAYIT:\n";
-                    d.forEach(m => log += `> ${m.soru}\n`);
-                    addUI(log || "Henüz kayıt yok.", 'bot');
+                    d.forEach(m => log += `- ${m.soru}\n`);
+                    addUI(log || "Henüz kayıt yok aslanım.", 'bot');
                 } catch(e) { addUI("Veritabanı hatası!", 'bot'); }
                 return;
             }
 
-            // --- BOT CEVABI ---
             try {
                 const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
                     method: "POST",
@@ -88,14 +84,13 @@
                 const botText = data.choices[0].message.content;
                 addUI(botText, 'bot');
 
-                // --- SESSİZCE KAYDET ---
                 fetch(`${SB_URL}/rest/v1/mesajlar`, {
                     method: "POST",
                     headers: { "apikey": SB_KEY, "Authorization": `Bearer ${SB_KEY}`, "Content-Type": "application/json" },
                     body: JSON.stringify({ soru: text, cevap: botText })
                 }).catch(e => {});
 
-            } catch(e) { addUI("Hata oluştu, anahtarı kontrol et!", 'bot'); }
+            } catch(e) { addUI("Hata: Bağlantıyı kontrol et aslanım!", 'bot'); }
         }
     </script>
 </body>
